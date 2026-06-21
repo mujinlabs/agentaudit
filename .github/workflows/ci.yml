@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+          pip install -e .
+      - name: Run tests
+        run: pytest -q
+
+      # Dogfood: agentaudit audits its own examples and must flag the
+      # malicious one (CI fails if our own detector regresses).
+      - name: Self-audit (must detect malicious sample)
+        run: |
+          if agentaudit scan examples/malicious-skill --fail-on high; then
+            echo "ERROR: malicious sample was not flagged" && exit 1
+          else
+            echo "ok: malicious sample correctly flagged"
+          fi
