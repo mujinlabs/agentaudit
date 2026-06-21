@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agentaudit"
+version = "0.1.0"
+description = "Security & quality audit for AI-agent extensions (Claude Code skills, MCP servers, plugins) — scan before you install."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Mujin Labs" }]
+keywords = ["ai-agents", "claude-code", "mcp", "skills", "security", "supply-chain", "static-analysis"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Security",
+  "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = []  # stdlib only — zero-friction install
+
+[project.urls]
+Homepage = "https://github.com/mujinlabs/agentaudit"
+Issues = "https://github.com/mujinlabs/agentaudit/issues"
+
+[project.scripts]
+agentaudit = "agentaudit.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agentaudit"]
