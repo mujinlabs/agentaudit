@@ -1,5 +1,10 @@
 # agentaudit
 
+[![CI](https://github.com/mujinlabs/agentaudit/actions/workflows/ci.yml/badge.svg)](https://github.com/mujinlabs/agentaudit/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/mujin-agentaudit)](https://pypi.org/project/mujin-agentaudit/)
+[![Python](https://img.shields.io/pypi/pyversions/mujin-agentaudit)](https://pypi.org/project/mujin-agentaudit/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 **Scan AI-agent extensions for security & quality risks *before* you install them.**
 
 The agent ecosystem exploded — 21,000+ Claude Code skills, thousands of MCP
