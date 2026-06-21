@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "agentaudit"
+name = "mujin-agentaudit"
 version = "0.1.0"
 description = "Security & quality audit for AI-agent extensions (Claude Code skills, MCP servers, plugins) — scan before you install."
 readme = "README.md"

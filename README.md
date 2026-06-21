@@ -51,12 +51,12 @@ job is to surface what deserves a second look.
 ## Install
 
 ```bash
-pipx install agentaudit      # recommended
+pipx install mujin-agentaudit      # recommended
 # or
-pip install agentaudit
+pip install mujin-agentaudit
 ```
 
-Requires Python 3.9+. Zero dependencies.
+Requires Python 3.9+. Zero dependencies. The installed command is **`agentaudit`**.
 
 ## Usage
 
