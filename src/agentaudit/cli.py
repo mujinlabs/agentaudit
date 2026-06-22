@@ -8,6 +8,7 @@ import sys
 
 from . import __version__
 from .scanner import scan, Report
+from .sarif import to_sarif
 
 # ANSI colors (auto-disabled when not a TTY or NO_COLOR set).
 import os
@@ -66,7 +67,11 @@ def main(argv: list[str] | None = None) -> int:
 
     p_scan = sub.add_parser("scan", help="scan a directory or file")
     p_scan.add_argument("path", help="path to an extension directory or file")
-    p_scan.add_argument("--json", action="store_true", help="emit machine-readable JSON")
+    p_scan.add_argument("--format", choices=["text", "json", "sarif"], default="text",
+                        help="output format (default: text). "
+                             "sarif = GitHub code-scanning / PR annotations")
+    p_scan.add_argument("--json", action="store_true",
+                        help="deprecated alias for --format json")
     p_scan.add_argument("--fail-on", default="high",
                         choices=["critical", "high", "medium", "low", "none"],
                         help="minimum severity that causes a non-zero exit (default: high)")
@@ -90,8 +95,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {e}", file=sys.stderr)
         return 2
 
-    if args.json:
+    fmt = "json" if args.json else args.format
+    if fmt == "json":
         print(json.dumps(report.to_dict(), indent=2))
+    elif fmt == "sarif":
+        print(json.dumps(to_sarif(report), indent=2))
     else:
         print(render(report))
 

@@ -66,13 +66,39 @@ Requires Python 3.9+. Zero dependencies. The installed command is **`agentaudit`
 ## Usage
 
 ```bash
-agentaudit scan <path>              # audit a directory or file
-agentaudit scan <path> --json       # machine-readable output
-agentaudit scan <path> --fail-on high   # exit non-zero for CI gating
+agentaudit scan <path>                     # audit a directory or file
+agentaudit scan <path> --format json       # machine-readable JSON
+agentaudit scan <path> --format sarif      # SARIF 2.1.0 (GitHub code scanning)
+agentaudit scan <path> --fail-on high      # exit non-zero for CI gating
 ```
 
 `--fail-on` makes it a CI gate: drop it into the workflow that vendors or
 updates an agent extension and block merges that introduce risky patterns.
+
+## GitHub code scanning (SARIF)
+
+`--format sarif` emits SARIF 2.1.0, so findings show up natively in GitHub's
+**Security → Code scanning** tab and as inline PR annotations (and in any
+SARIF-aware platform — GitLab, Azure DevOps, Sonar). Severities map to GitHub's
+Critical/High/Medium/Low badges, and findings get stable fingerprints so a moved
+line isn't re-reported as a new alert.
+
+```yaml
+# .github/workflows/extension-audit.yml
+permissions:
+  security-events: write     # required to upload SARIF
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pipx install mujin-agentaudit
+      - run: agentaudit scan ./skills --format sarif > agentaudit.sarif
+      - uses: github/codeql-action/upload-sarif@v3
+        with: { sarif_file: agentaudit.sarif }
+```
 
 ## Why trust this (and how it stays honest)
 
@@ -83,9 +109,9 @@ can read and argue with. PRs that add rules (or fix false positives) are welcome
 
 ## Roadmap
 
-- More rule packs (MCP transport config, plugin manifest policy)
+- ✅ SARIF output (v0.2) — GitHub Action listing next
 - `--baseline` to suppress known/accepted findings
-- SARIF output + GitHub Action
+- More rule packs (MCP transport config, plugin manifest policy)
 - Team policy files and a hosted dashboard *(planned paid tier — the CLI stays free and open)*
 
 ---
